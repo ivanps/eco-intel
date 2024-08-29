@@ -1,5 +1,5 @@
 ---
-title: "Measuring Ecological Intelligence on Business Students"
+title: "Measuring Ecological Intelligence on University Students"
 date: "`r Sys.Date()`"
 output: html_document
 knit: (function(inputFile, encoding) {
@@ -49,6 +49,8 @@ This scale was based on Turkey and Turkish lifestyle, as the author comment in h
 
 ## Survey Data
 
+We read the data from the Excel *file Ecological Scale.xlsx* that is in the *Data* folder. We also code the scale variables.
+
 ```{r, echo=TRUE}
 dfenc <- read.xlsx(xlsxFile = "../Data/Ecologial Scale.xlsx", 
                      sheet = "Ecological Inteligence Scale", colNames=TRUE) %>%
@@ -63,8 +65,10 @@ for (i in 7:18) {
                       `Partly disagree`=2,
                       `Completely disagree`=1)
 }
+head(dfenc)
 ```
 
+We construct a table to describe the demographic characteristics of the surveyed students.
 
 ```{r, echo=TRUE}
 dfdemo <- select(dfenc, student:age)
@@ -91,7 +95,7 @@ kbl(tbdesc) %>%
 
 ## Descriptive
 
-Now we compute the indicators and its statistics.
+Now we compute the indicators and its descriptive statistics.
 
 ```{r, echo=TRUE}
 dfenc$campus[dfenc$campus == "Aguascalientes"] <- "Otro"
@@ -103,11 +107,6 @@ dfenc <- dfenc %>%
          social = (social1+social2+social3+social4)/4,
          econ = (econ1+econ2+econ3)/3)
 psych::describe(select(dfenc,holis:econ, change))
-```
-
-Let us obtain the correlation matrix and their corresponding p-values. 
-```{r, echo=TRUE}
-rcorr(as.matrix(select(dfenc,holis1:econ3)))
 ```
 
 ## Cronbach's alpha

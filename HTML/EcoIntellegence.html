@@ -12,7 +12,7 @@
 
 <meta name="date" content="2024-08-29" />
 
-<title>Measuring Ecological Intelligence on Business Students</title>
+<title>Measuring Ecological Intelligence on University Students</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -574,7 +574,7 @@ display: none;
 
 
 <h1 class="title toc-ignore">Measuring Ecological Intelligence on
-Business Students</h1>
+University Students</h1>
 <h4 class="date">2024-08-29</h4>
 
 </div>
@@ -623,6 +623,9 @@ researchers.</p>
 </div>
 <div id="survey-data" class="section level2">
 <h2>Survey Data</h2>
+<p>We read the data from the Excel <em>file Ecological Scale.xlsx</em>
+that is in the <em>Data</em> folder. We also code the scale
+variables.</p>
 <pre class="r"><code>dfenc &lt;- read.xlsx(xlsxFile = &quot;../Data/Ecologial Scale.xlsx&quot;, 
                      sheet = &quot;Ecological Inteligence Scale&quot;, colNames=TRUE) %&gt;%
   mutate(Username = seq(1,n())) %&gt;%
@@ -635,7 +638,38 @@ for (i in 7:18) {
                       `Not sure`=3,
                       `Partly disagree`=2,
                       `Completely disagree`=1)
-}</code></pre>
+}
+head(dfenc)</code></pre>
+<pre><code>##                         date student      campus  genre nationality
+## 1  2024/05/13 2:53:00 PM MDT       1 Guadalajara Hombre    Mexicana
+## 2  2024/05/13 4:37:16 PM MDT       2 Guadalajara Hombre    Mexicana
+## 3 2024/05/14 12:03:46 PM MDT       3 Guadalajara  Mujer    Mexicana
+## 4  2024/05/14 3:14:40 PM MDT       4 Guadalajara  Mujer    Mexicana
+## 5  2024/05/14 3:15:00 PM MDT       5 Guadalajara  Mujer    Mexicana
+## 6  2024/05/14 3:16:29 PM MDT       6 Guadalajara  Mujer    Mexicana
+##            age holis1 holis2 holis3 holis4 holis5 social1 social2 social3
+## 1 23 a 24 años      4      1      4      1      3       1       1       3
+## 2 21 a 22 años      5      3      5      4      5       5       5       5
+## 3 21 a 22 años      4      5      5      3      4       4       4       5
+## 4 21 a 22 años      5      5      5      5      5       5       5       5
+## 5 21 a 22 años      4      4      5      4      4       3       3       4
+## 6 21 a 22 años      5      4      5      5      5       5       5       5
+##   social4 econ1 econ2 econ3 change
+## 1       3     3     4     5      8
+## 2       4     4     4     4      8
+## 3       3     5     4     4      9
+## 4       5     3     4     5      9
+## 5       4     4     5     4      7
+## 6       5     5     5     5      9
+##                                                                                                                                                                                                                                                                                                                              argument
+## 1                                                                                                                                                                                                                                                                                            Me siento más ecológicamente responsable
+## 2 Llevé algunas materias donde desarrollé proyectos de sustentabilidad y tuve la oportunidad de investigar sobre el impacto ambiental que generan las actividades que no son sustentables y el impacto positivo que pueden tener pequeñas acciones, un proyecto que recuerdo es la implementación de un sistema de captación de agua.
+## 3                                                                                                                                                                                                                                                 Considero que tuvo bastante impacto la carrera en mi conciencia del medio ambiente 
+## 4                                                                                                                                                                                                                                                                                            Me gusta mucho cuidar al medio ambiente 
+## 5                                                                                                                                                                                                                                 Vimos herramientas donde la parte ecológica es importante y un factor que puede aumentar tus ventas
+## 6                                                                                                                                                      Entendí los procesos empresariales y la manera en la que afectan a los colaboradores y el ambiente, y considero que si hay mucho que se puede hacer para disminuir el impacto.</code></pre>
+<p>We construct a table to describe the demographic characteristics of
+the surveyed students.</p>
 <pre class="r"><code>dfdemo &lt;- select(dfenc, student:age)
 
 countvals &lt;- function(x, categ) {return(sum(x==categ))}
@@ -844,7 +878,7 @@ Sinaloa
 </div>
 <div id="descriptive" class="section level2">
 <h2>Descriptive</h2>
-<p>Now we compute the indicators and its statistics.</p>
+<p>Now we compute the indicators and its descriptive statistics.</p>
 <pre class="r"><code>dfenc$campus[dfenc$campus == &quot;Aguascalientes&quot;] &lt;- &quot;Otro&quot;
 dfenc$campus[dfenc$campus == &quot;Morelia&quot;] &lt;- &quot;Otro&quot;
 
@@ -859,40 +893,6 @@ psych::describe(select(dfenc,holis:econ, change))</code></pre>
 ## social    2 82 4.00 0.66    4.0    4.03 0.74 2.00   5  3.00 -0.42    -0.29 0.07
 ## econ      3 82 3.96 0.66    4.0    3.97 0.49 2.33   5  2.67 -0.26    -0.43 0.07
 ## change    4 82 8.51 1.37    9.0    8.70 1.48 3.00  10  7.00 -1.27     2.24 0.15</code></pre>
-<p>Let us obtain the correlation matrix and their corresponding
-p-values.</p>
-<pre class="r"><code>rcorr(as.matrix(select(dfenc,holis1:econ3)))</code></pre>
-<pre><code>##         holis1 holis2 holis3 holis4 holis5 social1 social2 social3 social4 econ1 econ2 econ3
-## holis1    1.00   0.25   0.09  -0.02   0.17    0.22    0.24    0.18    0.04  0.15 -0.02  0.00
-## holis2    0.25   1.00   0.22   0.25   0.20    0.41    0.22    0.42    0.21  0.39  0.28  0.12
-## holis3    0.09   0.22   1.00   0.08   0.25    0.32    0.11    0.31    0.16  0.21  0.21  0.16
-## holis4   -0.02   0.25   0.08   1.00   0.22    0.29    0.21    0.26    0.18  0.13  0.23  0.33
-## holis5    0.17   0.20   0.25   0.22   1.00    0.19    0.11    0.32    0.04  0.13  0.24  0.07
-## social1   0.22   0.41   0.32   0.29   0.19    1.00    0.57    0.15    0.48  0.31  0.09  0.23
-## social2   0.24   0.22   0.11   0.21   0.11    0.57    1.00    0.09    0.41  0.14  0.07  0.15
-## social3   0.18   0.42   0.31   0.26   0.32    0.15    0.09    1.00    0.15  0.42  0.33  0.25
-## social4   0.04   0.21   0.16   0.18   0.04    0.48    0.41    0.15    1.00  0.42  0.02  0.37
-## econ1     0.15   0.39   0.21   0.13   0.13    0.31    0.14    0.42    0.42  1.00  0.21  0.38
-## econ2    -0.02   0.28   0.21   0.23   0.24    0.09    0.07    0.33    0.02  0.21  1.00  0.24
-## econ3     0.00   0.12   0.16   0.33   0.07    0.23    0.15    0.25    0.37  0.38  0.24  1.00
-## 
-## n= 82 
-## 
-## 
-## P
-##         holis1 holis2 holis3 holis4 holis5 social1 social2 social3 social4 econ1  econ2  econ3 
-## holis1         0.0211 0.4004 0.8883 0.1198 0.0452  0.0330  0.1065  0.7542  0.1672 0.8703 1.0000
-## holis2  0.0211        0.0505 0.0239 0.0731 0.0001  0.0498  0.0000  0.0612  0.0003 0.0114 0.2810
-## holis3  0.4004 0.0505        0.4583 0.0236 0.0034  0.3327  0.0046  0.1527  0.0564 0.0643 0.1582
-## holis4  0.8883 0.0239 0.4583        0.0435 0.0092  0.0578  0.0162  0.0970  0.2297 0.0379 0.0022
-## holis5  0.1198 0.0731 0.0236 0.0435        0.0830  0.3270  0.0031  0.7364  0.2538 0.0281 0.5369
-## social1 0.0452 0.0001 0.0034 0.0092 0.0830         0.0000  0.1701  0.0000  0.0042 0.4059 0.0413
-## social2 0.0330 0.0498 0.3327 0.0578 0.3270 0.0000          0.4084  0.0001  0.2240 0.5221 0.1654
-## social3 0.1065 0.0000 0.0046 0.0162 0.0031 0.1701  0.4084          0.1871  0.0000 0.0024 0.0224
-## social4 0.7542 0.0612 0.1527 0.0970 0.7364 0.0000  0.0001  0.1871          0.0000 0.8438 0.0006
-## econ1   0.1672 0.0003 0.0564 0.2297 0.2538 0.0042  0.2240  0.0000  0.0000         0.0561 0.0004
-## econ2   0.8703 0.0114 0.0643 0.0379 0.0281 0.4059  0.5221  0.0024  0.8438  0.0561        0.0278
-## econ3   1.0000 0.2810 0.1582 0.0022 0.5369 0.0413  0.1654  0.0224  0.0006  0.0004 0.0278</code></pre>
 </div>
 <div id="cronbachs-alpha" class="section level2">
 <h2>Cronbach’s alpha</h2>
